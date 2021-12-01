@@ -17,7 +17,7 @@ function getParametersForUnsplash({ width, height, quality, format }) {
  * (Markdown으로 된 문자열의 특수문자를 제거하기 위함)
  * */
 function removeSpecialCharacter(str) {
-  const removeCharacters = [
+  /* const removeCharacters = [
     "#",
     "_",
     "*",
@@ -46,7 +46,16 @@ function removeSpecialCharacter(str) {
       }
       j++;
     }
-  }
+  } */
+
+  /**
+   * Bottleneck 현상은 어떤 하나의 코드로 인해 시스템 전체의 성능이나 용량이 제한을 받는 현상을 의미한다.
+   * 기존 removeSpecialCharacter 함수는 10000자가 넘는 문자열에 대해 특수문자를 검사했기 때문에 굉장히 많은 시간의 자바스크립트 실행이 필요했다.
+   * 실제 필요한 문자열은 200자 이므로 10000자나 넘는 문자열에 대해 반복문을 돌리지 않고 필요한 만큼 작업을 줄인다.
+   * 또한 효과적으로 특수문자를 제거할 수 있는 방법을 찾아본다.
+   */
+  let _str = str.substring(0, 200);
+  _str = _str.replace(/[\#\_\*\~\&\;\!\[\]\`\>\\n\=\-]/g, "");
 
   return _str;
 }
