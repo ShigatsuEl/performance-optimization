@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 import Header from "./components/Header";
 import InfoTable from "./components/InfoTable";
@@ -6,10 +6,30 @@ import SurveyChart from "./components/SurveyChart";
 import Footer from "./components/Footer";
 // import ImageModal from './components/ImageModal'
 
-const LazyImageModel = lazy(() => import("./components/ImageModal"));
+function lazyWithPreload(importFunc) {
+  const Component = lazy(importFunc);
+  Component.preload = importFunc;
+  return Component;
+}
+
+// Lazy Loading의 단점도 존재!
+// -> 최초 페이지를 띄울 때는 속도가 빨라지지만 모달을 띄울 때는 오히려 성능이 더 느려진다.
+// -> 컴포넌트 Preload를 사용하여 해결한다.
+const LazyImageModel = lazyWithPreload(() => import("./components/ImageModal"));
 
 function App() {
   const [showModal, setShowModal] = useState(false);
+
+  // 2. 최초 페이지가 로드가 되고 모든 컴포넌트가 마운트가 끝났을 때 컴포넌트를 로딩한다.
+  useEffect(() => {
+    // const component = import("./components/ImageModal");
+    LazyImageModel.preload();
+  }, []);
+
+  // 1. 버튼 위에 마우스를 올려 놨을 때 컴포넌트를 로딩한다.
+  //   const handleMouseEnter = () => {
+  //     const component = import("./components/ImageModal");
+  //   };
 
   return (
     <div className="App">
@@ -19,6 +39,7 @@ function App() {
         onClick={() => {
           setShowModal(true);
         }}
+        // onMouseEnter={handleMouseEnter}
       >
         올림픽 사진 보기
       </ButtonModal>
