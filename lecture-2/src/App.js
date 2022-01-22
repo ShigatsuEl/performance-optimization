@@ -24,6 +24,9 @@ function App() {
   useEffect(() => {
     // const component = import("./components/ImageModal");
     LazyImageModel.preload();
+    const img = new Image();
+    img.src =
+      "https://stillmed.olympic.org/media/Photos/2016/08/20/part-1/20-08-2016-Football-Men-01.jpg?interpolation=lanczos-none&resize=*:800";
   }, []);
 
   // 1. 버튼 위에 마우스를 올려 놨을 때 컴포넌트를 로딩한다.
